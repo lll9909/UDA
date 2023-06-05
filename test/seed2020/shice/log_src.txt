@@ -1,0 +1,32 @@
+==========================================
+gpu_id:0
+s:0
+t:1
+max_epoch:60
+batch_size:8
+worker:4
+dset:shice
+lr:0.01
+seed:2020
+cls_par:0.1
+ent_par:1.0
+gent:True
+ent:True
+bottleneck:256
+layer:linear
+classifier:bn
+smooth:0.1
+output:test
+issave:True
+k_disc:1
+k_clf:10
+proepoch:20
+tau:0.99
+w_loss:0
+class_num:3
+device:cuda
+output_dir:test\seed2020\shice
+out_file:<_io.TextIOWrapper name='test\\seed2020\\shice\\log_src.txt' mode='w' encoding='cp936'>
+
+Task-sourece-train/test: shice, Iter:473/28380; Accuracy = 38.00%/ 35.84%;train_loss1.0975732803344727/val_loss0.5497292280197144
+Task-sourece-train/test: shice, Iter:946/28380; Accuracy = 87.02%/ 87.79%;train_loss1.2619683742523193/val_loss0.6029003858566284
