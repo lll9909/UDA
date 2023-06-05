@@ -228,7 +228,7 @@ def digit_load(args, num=1):
         select_index = torch.randperm(all_num)
         all_data2 = all_data2[select_index, :]
         all_label2 = all_label2[select_index, :]
-        train_ratio = 7/10
+        train_ratio = 10/10
         train_num = int(all_num*train_ratio)
         #
         train_data2 = all_data2[0:train_num, :]
@@ -243,14 +243,17 @@ def digit_load(args, num=1):
         train_index = torch.arange(num_train_instances)
         train_target = MyDataset(train_data2, train_label2, train_index)
 
-        test_data2 = all_data2[train_num:, :]
-        test_label2 = all_label2[train_num:, :]
-        num_test_instances = len(test_data2)
-        test_data2 = torch.from_numpy(test_data2).type(torch.FloatTensor)
-        test_label2 = torch.from_numpy(test_label2).type(torch.LongTensor)
-        test_data2 = test_data2.view(num_test_instances, 1, -1)
-        test_label2 = np.squeeze(test_label2.view(num_test_instances, 1))
-        test_index = torch.arange(num_test_instances)
+        test_data2 = train_data2
+        test_label2 = train_label2
+        test_index = train_index
+        # test_data2 = all_data2[train_num:, :]
+        # test_label2 = all_label2[train_num:, :]
+        # num_test_instances = len(test_data2)
+        # test_data2 = torch.from_numpy(test_data2).type(torch.FloatTensor)
+        # test_label2 = torch.from_numpy(test_label2).type(torch.LongTensor)
+        # test_data2 = test_data2.view(num_test_instances, 1, -1)
+        # test_label2 = np.squeeze(test_label2.view(num_test_instances, 1))
+        # test_index = torch.arange(num_test_instances)
         test_target = MyDataset(test_data2, test_label2, test_index)
 
     dset_loaders = {}
@@ -620,7 +623,7 @@ def project_w(args):
     print(sim_all.shape)
     sim_all = sim_all.mean(axis=0)
     sim_all = (sim_all - sim_all.min()) / (sim_all.max() - sim_all.min())
-    sio.savemat('w.mat', {'w': sim_all})
+    sio.savemat(args.output_dir+'/w.mat', {'w': sim_all})
     print('over')
 
 
@@ -636,7 +639,7 @@ def train_target(args):
     data = sio.loadmat(osp.join(args.output_dir,'center.mat'))
     center = data['center']
     center = torch.from_numpy(center).type(torch.FloatTensor).to(args.device)
-    data2 = sio.loadmat('w.mat')
+    data2 = sio.loadmat(args.output_dir+'/w.mat')
     w = data2['w']
     weight = torch.from_numpy(w).type(torch.FloatTensor).to(args.device)
     weight = weight**2
@@ -949,11 +952,11 @@ def obtain_label(loader, netF, netB, netC, args, c=None):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='SHOT')
-    parser.add_argument('--gpu_id', type=str, nargs='?', default='0', help="device id to run")
+    parser.add_argument('--gpu_id', type=str, nargs='?', default='1', help="device id to run")
     parser.add_argument('--s', type=int, default=0, help="source")
     parser.add_argument('--t', type=int, default=1, help="target")
     parser.add_argument('--max_epoch', type=int, default=60, help="maximum epoch")
-    parser.add_argument('--batch_size', type=int, default=8, help="batch_size")
+    parser.add_argument('--batch_size', type=int, default=128, help="batch_size")
     parser.add_argument('--worker', type=int, default=4, help="number of workers")
     parser.add_argument('--dset', type=str, default='shice', choices=['u2m', 'm2u','s2m','che','shice'])
     parser.add_argument('--lr', type=float, default=0.01, help="learning rate")
