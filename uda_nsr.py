@@ -31,12 +31,12 @@ from sklearn.manifold import TSNE
 
 def plot_with_labels(lowDWeights, labels, epoch):
 
-    plt.cla() #clear当前活动的坐标轴
-    X, Y = lowDWeights[:, 0], lowDWeights[:, 1] #把Tensor的第1列和第2列,也就是TSNE之后的前两个特征提取出来,作为X,Y
+    plt.cla() 
+    X, Y = lowDWeights[:, 0], lowDWeights[:, 1] 
     for x, y, s in zip(X, Y, labels):
         c = cm.rainbow(int(255 * s / 3));
         plt.text(x, y, s, backgroundcolor=c, fontsize=9)
-        # plt.text(x, y, str(s),color=c,fontdict={'weight': 'bold', 'size': 9}) #在指定位置放置文本
+        # plt.text(x, y, str(s),color=c,fontdict={'weight': 'bold', 'size': 9}) 
     plt.xlim(X.min(), X.max());
     plt.ylim(Y.min(), Y.max());
     plt.title('t-SNE Visual')
@@ -49,7 +49,7 @@ class MyDataset(Dataset):
     def __init__(self, data, labels, idx):
         self.data = data
         self.labels = labels
-        self.idx = idx # 我的例子中label是一样的，如果你的不同，再增加一个即可
+        self.idx = idx 
 
     def __getitem__(self, index):
         data, labels, idx = self.data[index], self.labels[index], self.idx[index]
@@ -58,7 +58,7 @@ class MyDataset(Dataset):
         return (data1, data2), labels, idx
 
     def __len__(self):
-        return len(self.data) # 我的例子中len(self.data1) = len(self.data2)
+        return len(self.data)
 def recycle(arr):
     kk = arr.size(1)
     k = int((2*np.random.random()-1)*kk)
